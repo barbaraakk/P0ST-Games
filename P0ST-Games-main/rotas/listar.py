@@ -4,9 +4,7 @@ from modelo.jogo import *
 @app.route("/listar")
 def listar():
     # obter os dados da classe informada
-    dados = None
-    #if classe == "Jogo":
-    #    dados = db.session.query(Jogo).all()
+    dados = db.session.query(Jogo).all()
     
     if dados:
       # converter dados para json
