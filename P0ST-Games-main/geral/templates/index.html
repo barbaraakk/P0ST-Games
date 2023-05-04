@@ -94,6 +94,105 @@
     <div class="modal fade text-center portfolio-modal" role="dialog" tabindex="-1" id="portfolioModal1">
         
     </div>
+    <script>
+        $(function () {
+            $(function () {
+$(document).on("click", "#botaoEnvia", function () {
+
+    var rota = 'http://localhost:5000/';
+    var vetor_dados = $("#Formulario").serializeArray();
+
+    var chave_valor = {};
+    for (var i = 0; i < vetor_dados.length; i++) {
+        chave_valor[vetor_dados[i]['name']] = vetor_dados[i]['value'];
+    }
+
+    var dados_json = JSON.stringify(chave_valor);
+
+    var acao = $.ajax({
+        url: rota,
+        method: 'POST',
+        dataType: 'json', // os dados são recebidos no formato json,
+        contentType: 'application/json', // os dados serão enviados em json
+        data: dados_json
+    });
+
+    // se a chamada der certo
+    acao.done(function (retorno) {
+        try {
+            if (retorno.resultado == "ok") {
+                alert("Exame realizado incluído");
+            } else {
+                alert("Deu algum erro no backend: " + retorno.detalhes);
+            }
+        } catch (error) { // se algo der errado...
+            alert("Erro ao tentar fazer o ajax: " + error +
+                "\nResposta da ação: " + retorno);
+        }
+    });
+
+    // se a chamada der erro
+    acao.fail(function (jqXHR, textStatus) {
+        mensagem = encontrarErro(jqXHR, textStatus, rota);
+        alert("Erro na chamada ajax: " + mensagem);
+    });
+}); // fim click btIncluir
+
+function carregarCombo(combo_id) {
+    var acao = $.ajax({
+        url: 'http://localhost:5000/listar',                    
+        dataType: 'json', // os dados são recebidos no formato json
+    });
+    // se a chamada der certo
+    acao.done(function (retorno) {
+        try {
+            if (retorno.resultado == "ok") {
+                montar_combo(combo_id, retorno.detalhes);
+            } else {
+                alert("Deu algum erro no backend: " + retorno.detalhes);
+            }
+        } catch (error) { // se algo der errado...
+            alert("Erro ao tentar fazer o ajax: " + error +
+                "\nResposta da ação: " + retorno.detalhes);
+        }
+    });
+
+    // se a chamada der erro
+    acao.fail(function (jqXHR, textStatus) {
+        mensagem = encontrarErro(jqXHR, textStatus, rota);
+        alert("Erro na chamada ajax: " + mensagem);
+    });
+    
+    // https://stackoverflow.com/questions/6792878/jquery-ajax-error-function 
+    function encontrarErro(jqXHR, textStatus, rota) {
+        var msg = '';
+        if (jqXHR.status === 0) {
+            msg = 'Não foi possível conectar, ' +
+                'verifique se o endereço do backend está certo' +
+                ' e se o backend está rodando.';
+        } else if (jqXHR.status == 404) {
+            msg = 'A URL informada não foi encontrada no ' +
+                'servidor [erro 404]: ' + rota;
+        } else if (jqXHR.status == 500) {
+            msg = 'Erro interno do servidor [erro 500], ' +
+                'verifique nos logs do servidor';
+        } else if (textStatus === 'parsererror') {
+            msg = 'Falha ao decodificar o resultado json';
+        } else if (textStatus === 'timeout') {
+            msg = 'Tempo excessivo de conexão, estourou o limite (timeout)';
+        } else if (textStatus === 'abort') {
+            msg = 'Requisição abortada (abort)';
+        } else {
+            msg = 'Erro desconhecido: ' + jqXHR.responseText;
+        }
+        return msg;
+    }
+
+        }})});
+
+    </script>
+
+
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="static/js/agency.js"></script>
 </body>

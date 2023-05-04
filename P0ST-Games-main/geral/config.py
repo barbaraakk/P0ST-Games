@@ -10,7 +10,7 @@ CORS(app)
 
 # caminho do arquivo de banco de dados - sqlite
 path = os.path.dirname(os.path.abspath(__file__))
-arquivobd = os.path.join(path, 'Jogo.db')
+arquivobd = os.path.join(path, 'jogo.db')
 
 # caminho para arquivos em outras pastas
 caminhopai = os.path.dirname(path)
