@@ -1,7 +1,7 @@
 from geral.config import *
 from modelo.jogo import *
 
-@app.route("/", methods=['POST'])
+@app.route("/incluir", methods=['POST'])
 def incluir():
     dados = request.get_json()
     # cria o jogo
@@ -9,4 +9,7 @@ def incluir():
     # realiza a persistência do novo jogo
     db.session.add(nova)
     db.session.commit()
-    return render_template('index.html')
+    meujson = {"resultado": "ok"}
+    meujson.update({"detalhes": "ok"})
+    return jsonify(meujson)
+    #return render_template('index2.html')
