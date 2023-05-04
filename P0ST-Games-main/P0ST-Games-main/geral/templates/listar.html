@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>P0ST-GAMES</title>
+
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kaushan+Script&amp;display=swap">
+    <link rel="stylesheet" href="static/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body id="page-top" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="54">
+    <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark" id="mainNav">
+        <div class="container"><a class="navbar-brand" href="/">P0ST-GAMES</a><button data-bs-toggle="collapse"
+                data-bs-target="#navbarResponsive" class="navbar-toggler navbar-toggler-right" type="button"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i
+                    class="fa fa-bars"></i></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto text-uppercase">
+                    <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/listar">ListaGEM</a></li>
+
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <section class="page-section">
+        <div class="container">
+
+            <div class="text-center">
+                <h2 class="section-heading text-white">Lista de Jogos</h2>
+                <h3 class="section-subheading text-muted">Aqui é pra lista as coisa la do python de quando adiciona
+                    coisa na lista </h3>
+
+                    <div id="listagem_aqui">
+                        VAI APARECER AQUI
+                    </div>
+        
+
+            </div>
+
+            <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+
+            <script>
+                    $(function () {
+
+                var acao = $.ajax({
+                    url: 'http://191.52.7.78:5000/listar',
+                    dataType: 'json', // os dados são recebidos no formato json
+                });
+                // se a chamada der certo
+                acao.done(function (retorno) {
+                    try {
+                        if (retorno.resultado == "ok") {
+                            var html_antes = "";
+                            var html_depois = "<br>";
+                            for (var reg of retorno.detalhes) { //p vai valer cada pessoa do vetor de pessoas
+                                // criar um parágrafo
+                                var paragrafo = $("<p>");
+                                // informar o HTML deste parágrafo
+                                // observe o apóstrofo inclinado, para interpretar as variáveis
+                                //paragrafo.html(`==> ${p.nome}, ${p.email}`);
+                                var s = '';
+                                var lista_campos=['ano','genero','distribuidora', 'titulo','desenvolvedora'];
+                                for (campo of lista_campos) {
+                                    // os campos pode ser acessados como
+                                    // reg.campo
+                                    // ou
+                                    // reg[campo]
+                                    // ***** se for um campo composto, estará descrito como, por exemplo: pessoa.nome
+                                    // obs: só suporta 1 ponto até o momento
+
+                                    // se tem "." no campo, precisa fazer o parse
+                                    var teste = String(campo);
+                                    if (teste.indexOf(".") !== -1) {
+                                        // faz o parse
+                                        var partes = teste.split(".");
+                                        // pega o valor usando campo1.campo2
+                                        var valor = reg[partes[0]][partes[1]];
+                                        // o valor não está definido? Deu problema?
+                                        if (valor == undefined) {
+                                            valor = "";
+                                        }
+                                        s = s + html_antes + valor + html_depois;
+                                    } else {
+                                        s = s + html_antes + reg[campo] + html_depois;
+                                    }
+                                }
+                                paragrafo.html(`${s}`);
+                                // adicionar o parágrafo criado na div
+                                $('#listagem_aqui').append(paragrafo);
+                            }
+
+                        } else {
+                            alert("Deu algum erro no backend: " + retorno.detalhes);
+                        }
+                    } catch (error) { // se algo der errado...
+                        alert("Erro ao tentar fazer o ajax: " + error +
+                            "\nResposta da ação: " + retorno.detalhes);
+                    }
+                });
+
+                // se a chamada der erro
+                acao.fail(function (jqXHR, textStatus) {
+                    mensagem = encontrarErro(jqXHR, textStatus, rota);
+                    alert("Erro na chamada ajax: " + mensagem);
+                });
+            });
+            </script>
+</body>
+
+</html>
