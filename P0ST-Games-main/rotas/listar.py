@@ -12,7 +12,8 @@ def listar():
 
       meujson = {"resultado": "ok"}
       meujson.update({"detalhes": lista_jsons})
-    return render_template('listar.html')
+      return jsonify(meujson)
+      #return render_template('listar.html')
     
     #else:
       #return jsonify({"resultado":"erro", "detalhes":"classe informada inválida: "+classe})
